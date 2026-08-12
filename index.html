@@ -328,18 +328,23 @@
 
         function initData() {
             populateDropdowns();
+            // 加入這行：重新整理時自動清空密碼欄位
+            document.getElementById('queryPassword').value = '';
         }
 
         function populateDropdowns() {
             const querySelect = document.getElementById('querySeat');
             querySelect.innerHTML = '';
 
-            Object.keys(classData).forEach(seat => {
+            // 這裡加上 .sort() 來強制將座號由小到大排序 ("01", "02", "03"...)
+            Object.keys(classData).sort().forEach(seat => {
                 const opt = document.createElement('option');
                 opt.value = seat;
                 opt.textContent = `${seat} 號`;
                 querySelect.appendChild(opt);
             });
+            
+            // 強制將選單設定為 01 號，避免瀏覽器記住上一次的選擇
             querySelect.value = "01";
         }
 
