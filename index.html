@@ -1,386 +1,523 @@
+已貼上文字 (1)(1).txt
+文件
+我想要把項目改成橫向一列一列的要修改哪裡？
+
+如果你說的是「📜 班級點數兌換與規則」裡面的每個項目，目前是兩欄排列，想改成橫向一列一列排列，只要修改 .rules-grid 這一段即可。你目前的程式是：
+
+.rules-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+}
+
+
+@media (min-width: 600px) {
+    .rules-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+改成這樣：
+.rules-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+}
+
+並且把下面這整段刪除：
+
+@media (min-width: 600px) {
+    .rules-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+這樣每個項目就會變成：
+
+┌──────────────────────────────┐
+│ 每週檢核表完成13個勾          │
+│ +100 分 / 每週               │
+└──────────────────────────────┘
+
+
+┌──────────────────────────────┐
+│ 熱心助人／班務服務            │
+│ +50 分 / 次                  │
+└──────────────────────────────┘
+
+
+┌──────────────────────────────┐
+│ 保持一週座位整潔              │
+│ +50 分 / 每週                │
+└──────────────────────────────┘
+
+也就是不管電腦、手機或平板，都會一項一整列，由上往下排列。
+
+我是要變成一個項目一行字 這樣看起來比較舒適
+
+了解，你的意思是每個項目不要「標題一行、點數又一行」，而是直接讓一個項目橫向排成同一行，例如：
+
+每週檢核表完成 13 個勾　＋100 分／每週
+
+這樣會比較整齊、閱讀也更舒服。
+
+你要修改的是 .rule-card、.rule-title 和 .rule-points。你目前的項目結構是標題和點數分成兩個 <div>，所以會自然上下排列。
+
+把原本這段：
+.rule-card {
+    background: #fafafa;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 12px;
+}
+
+
+.rule-title {
+    font-weight: bold;
+    font-size: 0.95rem;
+    margin-bottom: 4px;
+}
+
+
+.rule-points {
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+改成：
+.rule-card {
+    background: #fafafa;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 12px 16px;
+
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+
+.rule-title {
+    font-weight: bold;
+    font-size: 0.95rem;
+    margin-bottom: 0;
+}
+
+
+.rule-points {
+    font-size: 0.9rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+修改後就會變成這樣：
+
+┌────────────────────────────────────────────┐
+│ 每週檢核表完成 13 個勾              +100 分／每週 │
+├────────────────────────────────────────────┤
+│ 熱心助人／班務服務                   +50 分／次 │
+├────────────────────────────────────────────┤
+│ 保持一週座位整潔                    +50 分／每週 │
+├────────────────────────────────────────────┤
+│ 作業未帶遲交一天                        200 分 │
+├────────────────────────────────────────────┤
+│ 挑選一首隔天的午餐音樂                  300 分 │
+└────────────────────────────────────────────┘
+
+我建議你再加上這一段，讓手機螢幕比較窄時自動調整：
+
+@media (max-width: 500px) {
+    .rule-card {
+        gap: 10px;
+        padding: 10px 12px;
+    }
+
+
+    .rule-title {
+        font-size: 0.85rem;
+    }
+
+
+    .rule-points {
+        font-size: 0.8rem;
+    }
+}
+
+這樣電腦版會是舒服的「項目在左、點數在右，同一行」，手機版也不容易擠在一起。
+
 <!DOCTYPE html>
-<html lang="zh-TW">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>鼎金國小 502 班級點數銀行</title>
-    <style>
-        :root {
-            --primary-color: #3b82f6;
-            --primary-dark: #1d4ed8;
-            --secondary-color: #10b981;
-            --warning-color: #f59e0b;
-            --danger-color: #ef4444;
-            --bg-color: #f8fafc;
-            --card-bg: #ffffff;
-            --text-main: #0f172a;
-            --text-sub: #475569;
-            --border-color: #e2e8f0;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-        }
+<html lang="zh-TW"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>鼎金國小 502 班級點數銀行</title> <style> :root { --primary-color: #3b82f6; --primary-dark: #1d4ed8; --secondary-color: #10b981; --warning-color: #f59e0b; --danger-color: #ef4444; --bg-color: #f8fafc; --card-bg: #ffffff; --text-main: #0f172a; --text-sub: #475569; --border-color: #e2e8f0; --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            padding: 20px;
-            line-height: 1.5;
-        }
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
 
-        .header {
-            text-align: center;
-            margin-bottom: 24px;
-            padding: 20px;
-            background: linear-gradient(135deg, #2563eb, #1d4ed8);
-            color: white;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-        }
+    body {
+        background-color: var(--bg-color);
+        color: var(--text-main);
+        padding: 20px;
+        line-height: 1.5;
+    }
 
-        .header h1 {
-            font-size: 1.8rem;
-            margin-bottom: 6px;
-            letter-spacing: 0.5px;
-        }
+    .header {
+        text-align: center;
+        margin-bottom: 24px;
+        padding: 20px;
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        color: white;
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+    }
 
-        .header p {
-            font-size: 0.95rem;
-            opacity: 0.9;
-        }
+    .header h1 {
+        font-size: 1.8rem;
+        margin-bottom: 6px;
+        letter-spacing: 0.5px;
+    }
 
+    .header p {
+        font-size: 0.95rem;
+        opacity: 0.9;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    @media (min-width: 768px) {
         .container {
-            max-width: 800px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
+            grid-template-columns: 320px 1fr;
         }
+    }
 
-        @media (min-width: 768px) {
-            .container {
-                grid-template-columns: 320px 1fr;
-            }
-        }
+    .card {
+        background: var(--card-bg);
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: var(--shadow);
+        border: 1px solid var(--border-color);
+    }
 
-        .card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border-color);
-        }
+    .card h2 {
+        font-size: 1.2rem;
+        margin-bottom: 16px;
+        color: var(--primary-dark);
+        border-bottom: 2px solid #eff6ff;
+        padding-bottom: 8px;
+    }
 
-        .card h2 {
-            font-size: 1.2rem;
-            margin-bottom: 16px;
-            color: var(--primary-dark);
-            border-bottom: 2px solid #eff6ff;
-            padding-bottom: 8px;
-        }
+    .form-group {
+        margin-bottom: 14px;
+    }
 
-        .form-group {
-            margin-bottom: 14px;
-        }
+    label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--text-sub);
+        margin-bottom: 6px;
+    }
 
-        label {
-            display: block;
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: var(--text-sub);
-            margin-bottom: 6px;
-        }
+    select, input, button {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 0.95rem;
+        outline: none;
+        transition: all 0.2s;
+    }
 
-        select, input, button {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 0.95rem;
-            outline: none;
-            transition: all 0.2s;
-        }
+    select:focus, input:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    }
 
-        select:focus, input:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
-        }
+    .btn {
+        background-color: var(--primary-color);
+        color: white;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        margin-top: 6px;
+    }
 
-        .btn {
-            background-color: var(--primary-color);
-            color: white;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            margin-top: 6px;
-        }
+    .btn:hover {
+        background-color: var(--primary-dark);
+    }
 
-        .btn:hover {
-            background-color: var(--primary-dark);
-        }
+    .student-query {
+        background: #f0fdf4;
+        border-color: #bbf7d0;
+    }
 
-        .student-query {
-            background: #f0fdf4;
-            border-color: #bbf7d0;
-        }
+    .student-query h2 {
+        color: #15803d;
+        border-bottom-color: #dcfce7;
+    }
 
-        .student-query h2 {
-            color: #15803d;
-            border-bottom-color: #dcfce7;
-        }
+    .balance-display {
+        background: white;
+        padding: 16px;
+        border-radius: 10px;
+        text-align: center;
+        margin-top: 12px;
+        border: 1px solid #bbf7d0;
+    }
 
-        .balance-display {
-            background: white;
-            padding: 16px;
-            border-radius: 10px;
-            text-align: center;
-            margin-top: 12px;
-            border: 1px solid #bbf7d0;
-        }
+    .balance-display .score {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: var(--secondary-color);
+        margin: 4px 0;
+    }
 
-        .balance-display .score {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: var(--secondary-color);
-            margin: 4px 0;
-        }
+    .balance-display .seat {
+        font-size: 0.9rem;
+        color: var(--text-sub);
+    }
 
-        .balance-display .seat {
-            font-size: 0.9rem;
-            color: var(--text-sub);
-        }
+    .privacy-banner {
+        background-color: #fffbeeb0;
+        border: 1px solid #fde68a;
+        color: #92400e;
+        padding: 10px 14px;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        margin-bottom: 16px;
+        line-height: 1.4;
+    }
 
-        .privacy-banner {
-            background-color: #fffbeeb0;
-            border: 1px solid #fde68a;
-            color: #92400e;
-            padding: 10px 14px;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            margin-bottom: 16px;
-            line-height: 1.4;
-        }
+    /* Rules Menu List */
+    .rules-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
 
-        /* Rules Menu List */
+    @media (min-width: 600px) {
         .rules-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 12px;
+            grid-template-columns: 1fr 1fr;
         }
+    }
 
-        @media (min-width: 600px) {
-            .rules-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
+    .rule-card {
+        background: #fafafa;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 12px;
+    }
 
-        .rule-card {
-            background: #fafafa;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 12px;
-        }
+    .rule-card.add { border-left: 4px solid var(--secondary-color); }
+    .rule-card.use { border-left: 4px solid var(--primary-color); }
+    .rule-card.sub { border-left: 4px solid var(--danger-color); }
 
-        .rule-title {
-            font-weight: bold;
-            font-size: 0.95rem;
-            margin-bottom: 4px;
-        }
+    .rule-title {
+        font-weight: bold;
+        font-size: 0.95rem;
+        margin-bottom: 4px;
+    }
 
-        .rule-points {
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-        .rule-card.add .rule-points { color: var(--secondary-color); }
-        .rule-card.use .rule-points { color: var(--primary-color); }
-        .rule-card.sub .rule-points { color: var(--danger-color); }
-    </style>
-</head>
-<body>
+    .rule-points {
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
 
-    <div class="header">
-        <h1>高雄市鼎金國小 502 班級點數銀行</h1>
-        <p>正向學習 • 自律管理 • 榮譽成長</p>
-    </div>
+    .rule-card.add .rule-points { color: var(--secondary-color); }
+    .rule-card.use .rule-points { color: var(--primary-color); }
+    .rule-card.sub .rule-points { color: var(--danger-color); }
+</style>
 
-    <div class="container">
-        <!-- Student Self Query Area -->
-        <div class="card student-query">
-            <h2>個人點數查詢</h2>
-            <div class="privacy-banner">
-                🔒 <strong>隱私保護模式</strong>：本系統不提供全班公開分數表。學生僅能透過輸入自己的專屬密碼查詢個人點數，保護個人隱私。
-            </div>
-            <div class="form-group">
-                <label for="querySeat">選擇座號</label>
-                <select id="querySeat">
-                    <!-- Options generated by JS -->
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="queryPassword">輸入密碼</label>
-                <input type="password" id="queryPassword" placeholder="輸入密碼">
-            </div>
-            <button class="btn" onclick="queryStudentScore()" style="background-color: #16a34a;">查詢我的點數</button>
+</head> <body>
 
-            <div id="queryResult" style="display: none;">
-                <div class="balance-display">
-                    <div class="seat" id="resSeat">座號 01</div>
-                    <div class="score" id="resScore">0</div>
-                    <div style="font-size: 0.8rem; color: #64748b;">目前可用點數</div>
-                </div>
-            </div>
+<div class="header">
+    <h1>高雄市鼎金國小 502 班級點數銀行</h1>
+    <p>正向學習 • 自律管理 • 榮譽成長</p>
+</div>
+
+<div class="container">
+    <!-- Student Self Query Area -->
+    <div class="card student-query">
+        <h2>個人點數查詢</h2>
+        <div class="privacy-banner">
+            🔒 <strong>隱私保護模式</strong>：本系統不提供全班公開分數表。學生僅能透過輸入自己的專屬密碼查詢個人點數，保護個人隱私。
         </div>
+        <div class="form-group">
+            <label for="querySeat">選擇座號</label>
+            <select id="querySeat">
+                <!-- Options generated by JS -->
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="queryPassword">輸入密碼</label>
+            <input type="password" id="queryPassword" placeholder="輸入密碼">
+        </div>
+        <button class="btn" onclick="queryStudentScore()" style="background-color: #16a34a;">查詢我的點數</button>
 
-        <!-- Rules & Privileges -->
-        <div class="card">
-            <h2 style="color: var(--primary-dark);">📜 班級點數兌換與規則</h2>
-            <div class="rules-grid">
-                <div class="rule-card add">
-                    <div class="rule-title">每週檢核表完成13個勾</div>
-                    <div class="rule-points">+100 分 / 每週</div>
-                </div>
-                <div class="rule-card add">
-                    <div class="rule-title">熱心助人 / 班務服務(點數不足0的情況)</div>
-                    <div class="rule-points">+50 分 / 次</div>
-                </div>
-                <div class="rule-card add">
-                    <div class="rule-title">保持一週座位整潔</div>
-                    <div class="rule-points">+50 分 / 每週</div>
-                </div>
-                
-                <div class="rule-card use">
-                    <div class="rule-title">作業未帶遲交一天</div>
-                    <div class="rule-points">200 分</div>
-                </div>
-                <div class="rule-card use">
-                    <div class="rule-title">挑選一首隔天的午餐音樂(需要老師同意的音樂)</div>
-                    <div class="rule-points">300 分</div>
-                </div>
-                <div class="rule-card use">
-                    <div class="rule-title">交換座位一節課(需要老師與同學同意)</div>
-                    <div class="rule-points">500 分</div>
-                </div>
-                <div class="rule-card use">
-                    <div class="rule-title">提議一項獎勵方式(需要老師同意)</div>
-                    <div class="rule-points">600 分</div>
-                </div>
-                <div class="rule-card use">
-                    <div class="rule-title">圈詞少一遍（作業無需訂正）</div>
-                    <div class="rule-points">700 分</div>
-                </div>
-                <div class="rule-card use">
-                    <div class="rule-title">甲乙本少一遍（作業無需訂正）</div>
-                    <div class="rule-points">700 分</div>
-                </div>
-                <div class="rule-card use">
-                    <div class="rule-title">抽班級小神秘禮物箱</div>
-                    <div class="rule-points">900 分</div>
-                </div>
-                <div class="rule-card use">
-                    <div class="rule-title">抽班級中神秘禮物箱</div>
-                    <div class="rule-points">1400 分</div>
-                </div>
-                <div class="rule-card use">
-                    <div class="rule-title">抽班級大神秘禮物箱</div>
-                    <div class="rule-points">1800 分</div>
-                </div>
-                
-                <div class="rule-card sub">
-                    <div class="rule-title">說不雅言語（需說3位同學優點）</div>
-                    <div class="rule-points">-50 分</div>
-                </div>
-                <div class="rule-card sub">
-                    <div class="rule-title">常規屢勸不聽三次</div>
-                    <div class="rule-points">-100 分</div>
-                </div>
-                <div class="rule-card sub">
-                    <div class="rule-title">故意造成同學受傷(身體、心理)</div>
-                    <div class="rule-points">-300 分</div>
-                </div>
+        <div id="queryResult" style="display: none;">
+            <div class="balance-display">
+                <div class="seat" id="resSeat">座號 01</div>
+                <div class="score" id="resScore">0</div>
+                <div style="font-size: 0.8rem; color: #64748b;">目前可用點數</div>
             </div>
         </div>
     </div>
 
-    <script>
-        /* =========================================================
-           ▼ 老師請在這裡直接修改各座號的分數與密碼 ▼
-           這段資料寫在程式碼中，修改後儲存即同步至網頁。
-           除了在此處編輯代碼外，網頁畫面上「不會」顯示全班分數清冊！
-           ========================================================= */
-        const classData = {
-            "01": { points: 0, password: "0001" },
-            "02": { points: 0, password: "0002" },
-            "03": { points: 0, password: "0003" },
-            "04": { points: 0, password: "0004" },
-            "05": { points: 0, password: "0005" },
-            "06": { points: 0, password: "0006" },
-            "07": { points: 0, password: "0007" },
-            "08": { points: 0, password: "0008" },
-            "09": { points: 0, password: "0009" },
-            "10": { points: 0, password: "0010" },
-            "11": { points: 0, password: "0011" },
-            "12": { points: 0, password: "0012" },
-            "13": { points: 0, password: "0013" },
-            "14": { points: 0, password: "0014" },
-            "15": { points: 0, password: "0015" },
-            "16": { points: 0, password: "0016" },
-            "17": { points: 0, password: "0017" },
-            "18": { points: 0, password: "0018" },
-            "19": { points: 0, password: "0019" },
-            "20": { points: 0, password: "0020" },
-            "21": { points: 0, password: "0021" },
-            "22": { points: 0, password: "0022" },
-            "23": { points: 0, password: "0023" },
-            "24": { points: 0, password: "0024" }
-        };
-
-        function initData() {
-            populateDropdowns();
-            // 加入這行：重新整理時自動清空密碼欄位
-            document.getElementById('queryPassword').value = '';
-        }
-
-        function populateDropdowns() {
-            const querySelect = document.getElementById('querySeat');
-            querySelect.innerHTML = '';
-
-            // 這裡加上 .sort() 來強制將座號由小到大排序 ("01", "02", "03"...)
-            Object.keys(classData).sort().forEach(seat => {
-                const opt = document.createElement('option');
-                opt.value = seat;
-                opt.textContent = `${seat} 號`;
-                querySelect.appendChild(opt);
-            });
+    <!-- Rules & Privileges -->
+    <div class="card">
+        <h2 style="color: var(--primary-dark);">📜 班級點數兌換與規則</h2>
+        <div class="rules-grid">
+            <div class="rule-card add">
+                <div class="rule-title">每週檢核表完成13個勾</div>
+                <div class="rule-points">+100 分 / 每週</div>
+            </div>
+            <div class="rule-card add">
+                <div class="rule-title">熱心助人 / 班務服務(點數不足0的情況)</div>
+                <div class="rule-points">+50 分 / 次</div>
+            </div>
+            <div class="rule-card add">
+                <div class="rule-title">保持一週座位整潔</div>
+                <div class="rule-points">+50 分 / 每週</div>
+            </div>
             
-            // 強制將選單設定為 01 號，避免瀏覽器記住上一次的選擇
-            querySelect.value = "01";
+            <div class="rule-card use">
+                <div class="rule-title">作業未帶遲交一天</div>
+                <div class="rule-points">200 分</div>
+            </div>
+            <div class="rule-card use">
+                <div class="rule-title">挑選一首隔天的午餐音樂(需要老師同意的音樂)</div>
+                <div class="rule-points">300 分</div>
+            </div>
+            <div class="rule-card use">
+                <div class="rule-title">交換座位一節課(需要老師與同學同意)</div>
+                <div class="rule-points">500 分</div>
+            </div>
+            <div class="rule-card use">
+                <div class="rule-title">提議一項獎勵方式(需要老師同意)</div>
+                <div class="rule-points">600 分</div>
+            </div>
+            <div class="rule-card use">
+                <div class="rule-title">圈詞少一遍（作業無需訂正）</div>
+                <div class="rule-points">700 分</div>
+            </div>
+            <div class="rule-card use">
+                <div class="rule-title">甲乙本少一遍（作業無需訂正）</div>
+                <div class="rule-points">700 分</div>
+            </div>
+            <div class="rule-card use">
+                <div class="rule-title">抽班級小神秘禮物箱</div>
+                <div class="rule-points">900 分</div>
+            </div>
+            <div class="rule-card use">
+                <div class="rule-title">抽班級中神秘禮物箱</div>
+                <div class="rule-points">1400 分</div>
+            </div>
+            <div class="rule-card use">
+                <div class="rule-title">抽班級大神秘禮物箱</div>
+                <div class="rule-points">1800 分</div>
+            </div>
+            
+            <div class="rule-card sub">
+                <div class="rule-title">說不雅言語（需說3位同學優點）</div>
+                <div class="rule-points">-50 分</div>
+            </div>
+            <div class="rule-card sub">
+                <div class="rule-title">常規屢勸不聽三次</div>
+                <div class="rule-points">-100 分</div>
+            </div>
+            <div class="rule-card sub">
+                <div class="rule-title">故意造成同學受傷(身體、心理)</div>
+                <div class="rule-points">-300 分</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    /* =========================================================
+       ▼ 老師請在這裡直接修改各座號的分數與密碼 ▼
+       這段資料寫在程式碼中，修改後儲存即同步至網頁。
+       除了在此處編輯代碼外，網頁畫面上「不會」顯示全班分數清冊！
+       ========================================================= */
+    const classData = {
+        "01": { points: 0, password: "0001" },
+        "02": { points: 0, password: "0002" },
+        "03": { points: 0, password: "0003" },
+        "04": { points: 0, password: "0004" },
+        "05": { points: 0, password: "0005" },
+        "06": { points: 0, password: "0006" },
+        "07": { points: 0, password: "0007" },
+        "08": { points: 0, password: "0008" },
+        "09": { points: 0, password: "0009" },
+        "10": { points: 0, password: "0010" },
+        "11": { points: 0, password: "0011" },
+        "12": { points: 0, password: "0012" },
+        "13": { points: 0, password: "0013" },
+        "14": { points: 0, password: "0014" },
+        "15": { points: 0, password: "0015" },
+        "16": { points: 0, password: "0016" },
+        "17": { points: 0, password: "0017" },
+        "18": { points: 0, password: "0018" },
+        "19": { points: 0, password: "0019" },
+        "20": { points: 0, password: "0020" },
+        "21": { points: 0, password: "0021" },
+        "22": { points: 0, password: "0022" },
+        "23": { points: 0, password: "0023" },
+        "24": { points: 0, password: "0024" }
+    };
+
+    function initData() {
+        populateDropdowns();
+        // 加入這行：重新整理時自動清空密碼欄位
+        document.getElementById('queryPassword').value = '';
+    }
+
+    function populateDropdowns() {
+        const querySelect = document.getElementById('querySeat');
+        querySelect.innerHTML = '';
+
+        // 這裡加上 .sort() 來強制將座號由小到大排序 ("01", "02", "03"...)
+        Object.keys(classData).sort().forEach(seat => {
+            const opt = document.createElement('option');
+            opt.value = seat;
+            opt.textContent = `${seat} 號`;
+            querySelect.appendChild(opt);
+        });
+        
+        // 強制將選單設定為 01 號，避免瀏覽器記住上一次的選擇
+        querySelect.value = "01";
+    }
+
+    function queryStudentScore() {
+        const seat = document.getElementById('querySeat').value;
+        const pwd = document.getElementById('queryPassword').value;
+
+        if (!classData[seat]) {
+            alert('查無此座號');
+            return;
         }
 
-        function queryStudentScore() {
-            const seat = document.getElementById('querySeat').value;
-            const pwd = document.getElementById('queryPassword').value;
-
-            if (!classData[seat]) {
-                alert('查無此座號');
-                return;
-            }
-
-            if (classData[seat].password === pwd) {
-                document.getElementById('resSeat').textContent = `${seat} 號同學`;
-                document.getElementById('resScore').textContent = classData[seat].points;
-                document.getElementById('queryResult').style.display = 'block';
-            } else {
-                alert('密碼錯誤！');
-                document.getElementById('queryResult').style.display = 'none';
-            }
+        if (classData[seat].password === pwd) {
+            document.getElementById('resSeat').textContent = `${seat} 號同學`;
+            document.getElementById('resScore').textContent = classData[seat].points;
+            document.getElementById('queryResult').style.display = 'block';
+        } else {
+            alert('密碼錯誤！');
+            document.getElementById('queryResult').style.display = 'none';
         }
+    }
 
-        window.onload = initData;
-    </script>
-</body>
-</html>
+    window.onload = initData;
+</script>
+
+</body> </html>
+
+關閉
